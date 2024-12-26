@@ -13,10 +13,12 @@ model User {
   email         String    @unique
   image         String?
   emailVerified DateTime?
-  accounts      Account[]
-  sessions      Session[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  events   Event[]
 
   @@map("users")
 }
@@ -46,9 +48,10 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
@@ -60,4 +63,35 @@ model VerificationToken {
 
   @@id([identifier, token])
   @@map("verification_tokens")
+}
+
+model Event {
+  id              String   @id @default(uuid())
+  userId          String
+  alias           String   @unique
+  name            String
+  date            DateTime
+  location        String
+  description     String
+  image           String
+  imageBackground String
+  expectedGuests  Int
+
+  User   User    @relation(fields: [userId], references: [id])
+  guests Guest[]
+
+  @@map("events")
+}
+
+model Guest {
+  id           String  @id @default(uuid())
+  name         String
+  email        String
+  confirmed    Boolean
+  hasCompanion Boolean
+  qtdCompanion Int
+  event        Event?  @relation(fields: [eventId], references: [id])
+  eventId      String?
+
+  @@map("guests")
 }

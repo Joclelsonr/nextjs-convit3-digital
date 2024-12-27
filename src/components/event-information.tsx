@@ -7,31 +7,38 @@ export interface EventInformationProps {
   isHiddenName?: boolean;
 }
 
-export function EventInformation(props: EventInformationProps) {
+export function EventInformation({
+  event,
+  className,
+  isHiddenName,
+}: EventInformationProps) {
   return (
-    <div className={`flex flex-col gap-2 ${props.className ?? ""}`}>
-      {props.isHiddenName ? null : (
+    <div className={`flex flex-col gap-2 ${className ?? ""}`}>
+      {isHiddenName ? null : (
         <div className="flex-1 flex items-center gap-4 border border-zinc-800 py-3 px-6 rounded-lg">
           <span className="text-2xl text-zinc-400 font-black">
-            {props.event.alias}:
+            {event.alias}:
           </span>
-          <span className="text-xl text-zinc-300">{props.event.name}</span>
+          <span className="text-xl text-zinc-300">
+            {event.name ?? "Aguardando..."}
+          </span>
         </div>
       )}
       <div className="flex gap-2">
         <LabelInformation label="Data:">
           <span>
-            {new Date(props.event.date).toLocaleDateString()}
-            {" as "}
-            {new Date(props.event.date).toLocaleTimeString()}
+            {event.date &&
+              `${new Date(event.date).toLocaleDateString()} as ${new Date(
+                event.date
+              ).toLocaleTimeString()}`}
           </span>
         </LabelInformation>
         <LabelInformation label="Local:">
-          {props.event.location}
+          {event.location ?? "Aguardando..."}
         </LabelInformation>
       </div>
       <LabelInformation label="Descrição:">
-        {props.event.description}
+        {event.description ?? "Aguardando..."}
       </LabelInformation>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Event } from "@prisma/client";
-import { Window } from "./_components/window";
+import { Window } from "@/components/window";
 import { FormEvent } from "./_components/form-event";
 import { validateAlias } from "./_actions";
 

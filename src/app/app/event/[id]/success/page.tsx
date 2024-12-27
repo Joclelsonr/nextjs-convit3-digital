@@ -1,15 +1,16 @@
 "use client";
 
-import { Window } from "../../_components/window";
+import { Window } from "../../../../../components/window";
 import { AccessQRcode } from "./_components/access-qrcode";
 import { CopyClipboard } from "./_components/copy-clipboard";
-import { EventInformation } from "./_components/event-information";
+import { EventInformation } from "../../../../../components/event-information";
 import { Link1Icon } from "@radix-ui/react-icons";
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getEvent } from "./_actions";
 import { Event } from "@prisma/client";
+import Link from "next/link";
 
 export default function Page() {
   const params = useParams();
@@ -18,7 +19,7 @@ export default function Page() {
     typeof window !== "undefined" ? window.location.origin : "";
 
   useEffect(() => {
-    const fetchEvent = async () => {
+    const fetchEvent = async (): Promise<void> => {
       const eventResponse = await getEvent(params.id as string);
       if (eventResponse) {
         setEvent(eventResponse);
@@ -49,6 +50,12 @@ export default function Page() {
                 label="Link Administrador"
                 text={`${currentUrl}/event/admin/${event.id}`}
               />
+              <Link
+                href="/app"
+                className="h-9 px-4 py-2 rounded-md border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                Voltar
+              </Link>
             </div>
             <AccessQRcode event={event} />
           </div>

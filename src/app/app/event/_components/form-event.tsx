@@ -1,6 +1,6 @@
 import { Event } from "@prisma/client";
 import { Steps } from "./steps";
-import { InputField } from "./input-field";
+import { InputField } from "@/components/input-field";
 import { saveEvent } from "../_actions";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";

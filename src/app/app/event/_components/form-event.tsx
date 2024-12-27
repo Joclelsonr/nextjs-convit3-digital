@@ -8,18 +8,22 @@ import { useRouter } from "next/navigation";
 type FormEventProps = {
   event: Event;
   aliasValid: boolean;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
   setAliasValid: (valid: boolean) => void;
   changeEvent: (event: Event) => void;
   checkAlias: () => void;
 };
 
-export function FormEvent({ event, aliasValid, changeEvent }: FormEventProps) {
+export function FormEvent({
+  event,
+  aliasValid,
+  changeEvent,
+  isLoading,
+  setIsLoading,
+}: FormEventProps) {
   const router = useRouter();
-  const labels = [
-    "Identificação do Evento",
-    "Local e Data",
-    "Informações Finais",
-  ];
+  const labels = ["Nome do Evento", "Local e Data", "Informações Finais"];
 
   function formatAlias(value: string) {
     return value.replace(/ /g, "-").toLowerCase();
@@ -35,30 +39,32 @@ export function FormEvent({ event, aliasValid, changeEvent }: FormEventProps) {
   ];
 
   async function handleSubmit() {
+    setIsLoading(true);
     const response = await saveEvent(event);
-    if (response instanceof Error) {
+    if (response) {
       toast({
-        title: "Erro ao criar evento",
-        description: "Tente novamente mais tarde",
-        variant: "destructive",
+        title: "Evento criado com sucesso!",
+        description:
+          "Você pode compartilhar o link do seu evento com seus amigos!",
       });
+      setIsLoading(false);
+      return router.push(`/app/event/${response?.id}/success`);
     }
-
     toast({
-      title: "Evento criado com sucesso!",
-      description:
-        "Você pode compartilhar o link do seu evento com seus amigos!",
+      title: "Erro ao criar evento",
+      description: "Tente novamente mais tarde",
+      variant: "destructive",
     });
-    router.push(`/app/event/${response?.id}/success`);
   }
 
   return (
     <div>
       <Steps
         labels={labels}
-        labelAction="Cadastrar"
-        action={() => handleSubmit()}
+        labelAction="Criar Evento"
         isNextStep={allowNextStep}
+        isLoading={isLoading}
+        action={() => handleSubmit()}
       >
         <div className="flex flex-col gap-5">
           <InputField

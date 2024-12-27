@@ -43,16 +43,16 @@ export default function Page() {
               <CopyClipboard
                 icon={Link1Icon}
                 label="Link para convidar"
-                text={`${currentUrl}/invitation/${event.alias}`}
+                text={`${currentUrl}/app/invitation/${event.alias}`}
               />
               <CopyClipboard
                 icon={Link1Icon}
                 label="Link Administrador"
-                text={`${currentUrl}/event/admin/${event.id}`}
+                text={`${currentUrl}/app/event/admin/${event.id}`}
               />
               <Link
                 href="/app"
-                className="h-9 px-4 py-2 rounded-md border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"
+                className="flex justify-center px-4 py-2 rounded-md bg-background hover:bg-accent hover:text-accent-foreground"
               >
                 Voltar
               </Link>

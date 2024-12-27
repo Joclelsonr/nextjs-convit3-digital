@@ -9,6 +9,7 @@ import { validateAlias } from "./_actions";
 export default function Page() {
   const [event, changeEvent] = useState<Event>({} as Event);
   const [aliasValid, setAliasValid] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const checkAlias = useCallback(async () => {
     if (!event.alias) return;
@@ -31,9 +32,11 @@ export default function Page() {
         <FormEvent
           event={event}
           aliasValid={aliasValid}
+          isLoading={isLoading}
           setAliasValid={setAliasValid}
           checkAlias={checkAlias}
           changeEvent={changeEvent}
+          setIsLoading={setIsLoading}
         />
       </Window>
     </div>

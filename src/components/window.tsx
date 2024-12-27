@@ -11,7 +11,7 @@ type WindowProps = {
 
 export function Window(props: WindowProps) {
   return (
-    <div className="relative rounded-xl overflow-hidden border border-zinc-800">
+    <div className="relative max-w-4xl w-full rounded-xl overflow-hidden border border-zinc-800">
       <Image
         src={
           props.background

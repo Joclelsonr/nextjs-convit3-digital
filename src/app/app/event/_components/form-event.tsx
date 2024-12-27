@@ -1,18 +1,20 @@
 import { Event } from "@prisma/client";
-
 import { Steps } from "./steps";
 import { InputField } from "./input-field";
 import { saveEvent } from "../_actions";
+import { toast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 type FormEventProps = {
   event: Event;
   aliasValid: boolean;
   setAliasValid: (valid: boolean) => void;
-  checkAlias: () => void;
   changeEvent: (event: Event) => void;
+  checkAlias: () => void;
 };
 
 export function FormEvent({ event, aliasValid, changeEvent }: FormEventProps) {
+  const router = useRouter();
   const labels = [
     "Identificação do Evento",
     "Local e Data",
@@ -32,12 +34,30 @@ export function FormEvent({ event, aliasValid, changeEvent }: FormEventProps) {
       !!event.imageBackground,
   ];
 
+  async function handleSubmit() {
+    const response = await saveEvent(event);
+    if (response instanceof Error) {
+      toast({
+        title: "Erro ao criar evento",
+        description: "Tente novamente mais tarde",
+        variant: "destructive",
+      });
+    }
+
+    toast({
+      title: "Evento criado com sucesso!",
+      description:
+        "Você pode compartilhar o link do seu evento com seus amigos!",
+    });
+    router.push(`/app/event/${response?.id}/success`);
+  }
+
   return (
     <div>
       <Steps
         labels={labels}
         labelAction="Cadastrar"
-        action={() => saveEvent(event)}
+        action={() => handleSubmit()}
         isNextStep={allowNextStep}
       >
         <div className="flex flex-col gap-5">

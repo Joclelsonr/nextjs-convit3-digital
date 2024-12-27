@@ -18,7 +18,7 @@ export async function saveEvent(event: Event) {
       },
     });
 
-    console.log("response", response);
+    return response;
   } catch (error) {
     console.error(error);
   }

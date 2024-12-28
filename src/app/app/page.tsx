@@ -1,22 +1,69 @@
-import { Logo } from "@/components/logo";
+import { auth } from "@/lib/auth";
+import { Event } from "@prisma/client";
 import Link from "next/link";
 
-export default function Home() {
+import { CustomCard } from "./_components/custom-card";
+import { Loading } from "@/components/loading";
+import { CustomPagination } from "@/components/custom-pagination";
+import { getEvents } from "./_actions";
+
+export const dynamic = "force-dynamic";
+
+interface Props {
+  searchParams: { [key: string]: string | undefined };
+}
+
+export default async function Home({ searchParams }: Props) {
+  const session = await auth();
+  const userId = session?.user?.id;
+  const currentPage = parseInt(searchParams.page || "1", 10);
+  const perPage = 2;
+
+  const { events, totalEvents } = await getEvents(
+    userId as string,
+    currentPage,
+    perPage
+  );
+
+  const totalPages = Math.ceil(totalEvents / perPage);
+
   return (
-    <div className="h-screen flex flex-col gap-10 items-center justify-center bg-[url('/background-elements.svg')] bg-cover">
-      <div className="flex flex-col items-center gap-4">
-        <Logo size="lg" />
-        <p className="text-zinc-500 font-light w-96 leading-6 text-center select-none">
-          Crie e gerencie o convite do seu evento de forma rápida e fácil, sem
-          complicações
-        </p>
+    <div className="h-screen flex flex-col gap-8 items-center justify-center bg-[url('/background-elements.svg')] bg-cover">
+      <div className="flex items-center justify-between max-w-4xl w-full">
+        <h1 className="text-2xl text-zinc-200">Seus Eventos</h1>
+        <Link
+          href="/app/event"
+          className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition-colors"
+        >
+          Criar novo evento
+        </Link>
       </div>
-      <Link
-        href="/app/event"
-        className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition-colors"
-      >
-        Crie seu Evento
-      </Link>
+
+      <div className="max-w-4xl w-full flex gap-4">
+        {events && events.length === 0 && (
+          <div className="flex items-center justify-center w-full">
+            <h1 className="text-zinc-200">
+              Você ainda não tem eventos criados.
+            </h1>
+          </div>
+        )}
+        {events ? (
+          events.map((event: Event) => {
+            return (
+              <Link href={`/app/event/${event.id}/details`} key={event.id}>
+                <CustomCard {...event} />
+              </Link>
+            );
+          })
+        ) : (
+          <Loading width={50} height={50} />
+        )}
+      </div>
+      <div className="max-w-4xl w-full flex justify-center">
+        {events && events.length > 0 && (
+          <CustomPagination totalPages={totalPages} currentPage={currentPage} />
+        )}
+      </div>
     </div>
   );
 }

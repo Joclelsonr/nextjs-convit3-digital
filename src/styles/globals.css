@@ -77,3 +77,22 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Estilização da barra de rolagem */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--card-foreground));
+  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground));
+  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted));
+}

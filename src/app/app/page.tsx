@@ -2,9 +2,10 @@ import { auth } from "@/lib/auth";
 import { Event } from "@prisma/client";
 import Link from "next/link";
 
-import { CustomCard } from "./_components/custom-card";
 import { Loading } from "@/components/loading";
+import { CustomCard } from "./_components/custom-card";
 import { CustomPagination } from "@/components/custom-pagination";
+
 import { getEvents } from "./_actions";
 
 export const dynamic = "force-dynamic";
@@ -39,26 +40,22 @@ export default async function Home({ searchParams }: Props) {
         </Link>
       </div>
 
-      <div className="max-w-4xl w-full flex gap-4">
+      <div className="max-w-4xl w-full flex justify-around gap-4">
+        {!events && <Loading />}
         {events && events.length === 0 && (
-          <div className="flex items-center justify-center w-full">
-            <h1 className="text-zinc-200">
+          <div className="flex items-center justify-center w-full mt-20">
+            <h1 className="text-zinc-200 text-lg">
               Você ainda não tem eventos criados.
             </h1>
           </div>
         )}
-        {events ? (
-          events.map((event: Event) => {
-            return (
-              <Link href={`/app/event/${event.id}/details`} key={event.id}>
-                <CustomCard {...event} />
-              </Link>
-            );
-          })
-        ) : (
-          <Loading width={50} height={50} />
-        )}
+        {events.map((event: Event) => (
+          <Link href={`/app/event/${event.id}/details`} key={event.id}>
+            <CustomCard {...event} />
+          </Link>
+        ))}
       </div>
+
       <div className="max-w-4xl w-full flex justify-center">
         {events && events.length > 0 && (
           <CustomPagination totalPages={totalPages} currentPage={currentPage} />

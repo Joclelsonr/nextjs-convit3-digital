@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function CustomCard(props: Event) {
   return (
-    <Card className="w-full max-w-md overflow-hidden border-zinc-700 shadow-md bg-transparent">
+    <Card className="w-[430px] overflow-hidden border-zinc-700 shadow-md bg-transparent">
       <CardHeader className="p-0">
         <div
           className="h-40 bg-cover bg-center relative"

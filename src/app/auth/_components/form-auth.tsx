@@ -1,45 +1,89 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-
+import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { formSchema, FormSchema } from "../form-schema";
 
-export default function FormAuth() {
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { SubmitButton } from "@/components/button-submit";
+
+export function FormAuth() {
   const { toast } = useToast();
-  const handleSubmit = async (formData: FormData) => {
-    const email = formData.get("email");
-    const response = await signIn("nodemailer", {
-      email: email,
-      redirect: false,
-    });
-    if (response?.ok) {
+  const [isLoading, setIsLoading] = useState(false);
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  async function onSubmit(values: FormSchema) {
+    setIsLoading(true);
+
+    try {
+      const response = await signIn("nodemailer", {
+        email: values.email,
+        redirect: false,
+      });
+      if (response?.ok) {
+        toast({
+          title: "Email enviado",
+          description: "Verifique sua caixa de entrada",
+        });
+      }
+    } catch (error) {
+      console.log(error);
       toast({
-        title: "Email enviado",
-        description: "Verifique sua caixa de entrada",
+        title: "Erro ao enviar email",
+        description: "Tente novamente mais tarde",
       });
     }
-    toast({
-      title: "Erro ao enviar email",
-      description: "Tente novamente mais tarde",
-    });
-  };
+
+    setIsLoading(false);
+  }
 
   return (
-    <form action={handleSubmit} className="flex flex-col gap-4 w-80">
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="email" className="text-zinc-500">
-          Digite seu melhor email
-        </Label>
-        <Input type="email" id="email" name="email" className="text-zinc-500" />
-      </div>
-      <div>
-        <Button type="submit" className="w-full">
-          Enviar
-        </Button>
-      </div>
-    </form>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-4 w-96"
+      >
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-zinc-200">E-mail</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="email@email.com"
+                  {...field}
+                  className="text-zinc-400"
+                />
+              </FormControl>
+              <FormDescription>
+                Digite seu email para receber um link mágico de acesso.{" "}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="mt-4">
+          <SubmitButton isLoading={isLoading}>Enviar link</SubmitButton>
+        </div>
+      </form>
+    </Form>
   );
 }

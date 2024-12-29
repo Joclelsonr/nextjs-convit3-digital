@@ -14,7 +14,7 @@ type LogoProps = {
 export function Logo({ size = "sm" }: LogoProps) {
   return (
     <Link
-      href="/"
+      href="/app"
       className={`${fontRighteous.className} ${
         size === "lg" ? "flex-col" : ""
       } flex items-center gap-2`}

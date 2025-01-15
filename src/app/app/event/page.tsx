@@ -57,9 +57,9 @@ export default function Page() {
     <div className="h-screen flex flex-col gap-10 items-center justify-center bg-[url('/background-elements.svg')] bg-cover">
       <Window
         label="Qual evento vamos criar?"
-        title={"Novo Evento"}
-        image={""}
-        background={""}
+        title={form.watch("name") ?? "Novo Evento"}
+        image={form.watch("image") ?? ""}
+        background={form.watch("imageBackground") ?? ""}
       >
         <FormEvent
           form={form}

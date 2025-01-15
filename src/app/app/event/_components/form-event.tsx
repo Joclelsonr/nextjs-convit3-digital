@@ -71,7 +71,6 @@ export function FormEvent({
     const valid = await form.trigger(fields as FieldName[], {
       shouldFocus: true,
     });
-    console.log({ alias: aliasValid, form: valid });
     if (aliasValid && valid) {
       setCurrentStep(currentStep + 1);
     }
@@ -130,7 +129,7 @@ export function FormEvent({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex-1 flex flex-col gap-10 w-full">
+        <div className="flex-1 flex flex-col gap-4 w-full">
           {/* LABELS */}
           <div className="self-center">{handleLabel()}</div>
 
@@ -254,7 +253,7 @@ export function FormEvent({
           )}
 
           {currentStep === 2 && (
-            <section className="flex flex-col gap-5">
+            <section className="flex flex-col">
               <FormField
                 control={form.control}
                 name="description"
